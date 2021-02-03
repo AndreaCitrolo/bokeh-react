@@ -13,8 +13,8 @@ ARG USE_MOBY="true"
 # Install needed packages and setup non-root user. Use a separate RUN statement to add your
 # own dependencies. A user of "automatic" attempts to reuse an user ID if one already exists.
 ARG USERNAME=automatic
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
+ARG USER_UID=$USER_UID
+ARG USER_GID=$USER_GID
 COPY library-scripts/*.sh /tmp/library-scripts/
 RUN apt-get update \
     && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" \
@@ -23,21 +23,34 @@ RUN apt-get update \
     # Clean up
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/
 
-ENV MINICONDA_VERSION 4.9.2
-ENV CONDA_DIR $HOME/miniconda3
-ENV PATH=$CONDA_DIR/bin:$PATH
 
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py39_$MINICONDA_VERSION-Linux-x86_64.sh -O ~/miniconda.sh && \
-    chmod +x ~/miniconda.sh && \
-    ~/miniconda.sh -b -p $CONDA_DIR && \
-    rm ~/miniconda.sh
-
-RUN echo ". $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.profile && conda init bash && conda config --set auto_activate_base true 
-RUN conda install -y django=3 numpy scipy matplotlib pandas bokeh \
-    && conda install -y -c conda-forge djangorestframework \
-    && curl -sL https://deb.nodesource.com/setup_15.x | bash - && apt-get install -y nodejs \
+RUN curl -sL https://deb.nodesource.com/setup_15.x | bash - && apt-get install -y nodejs \
     && npm install --global yarn \ 
     && apt-get autoremove -y && apt-get clean -y
+
+USER vscode
+
+ENV MINICONDA_VERSION 4.9.2
+ENV CONDA_DIR /home/vscode/miniconda3
+ENV PATH=$CONDA_DIR/bin:$PATH
+
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py39_${MINICONDA_VERSION}-Linux-x86_64.sh -O ~/miniconda.sh \
+    && chmod +x ~/miniconda.sh \
+    && ~/miniconda.sh -b -p ${CONDA_DIR} \
+    && chown -R ${USER_UID}:${USER_GID} ${CONDA_DIR} \
+    && rm ~/miniconda.sh
+
+RUN echo ". $CONDA_DIR/etc/profile.d/conda.sh" >> ~/.profile
+
+ARG PROJECT_NAME=$PROJECT_NAME
+
+RUN ["bin/bash", "-c", "conda init zsh \
+    && source ~/.zshrc \
+    && conda create -n ${PROJECT_NAME} -y python=3.9 \
+    && conda config --set auto_activate_base true \
+    && conda activate ${PROJECT_NAME} \
+    && conda install -y django=3 numpy scipy matplotlib pandas bokeh \
+    && conda install -y -c conda-forge djangorestframework"]
 
 WORKDIR /home/vscode/workspace
 # Setting the ENTRYPOINT to docker-init.sh will configure non-root access 
