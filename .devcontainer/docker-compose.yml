@@ -33,7 +33,14 @@ services:
 
     # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
     # (Adding the "ports" property to this file will not forward from a Codespace.)
-  # backend:
-  #   build:
-  #     context: ../backend
-  #     dockerfile: Dockerfile
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      target: "development"
+    environment:
+      PROJECT_NAME: plotter
+    ports:
+      - 8080:8080
+    volumes:
+      - ../backend:/app:cached
