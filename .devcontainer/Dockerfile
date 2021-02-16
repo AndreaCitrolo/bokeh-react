@@ -50,7 +50,7 @@ RUN ["bin/bash", "-c", "conda init zsh \
     && conda config --set auto_activate_base true \
     && conda activate ${PROJECT_NAME} \
     && conda install -y django=3 numpy scipy matplotlib pandas bokeh \
-    && conda install -y -c conda-forge djangorestframework"]
+    && conda install -y -c conda-forge djangorestframework django-cors-headers"]
 
 WORKDIR /home/vscode/workspace
 # Setting the ENTRYPOINT to docker-init.sh will configure non-root access 

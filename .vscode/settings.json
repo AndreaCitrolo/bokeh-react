@@ -4,5 +4,6 @@
         "editor.tabSize": 2,
         "editor.autoIndent": true,
 
-    }
+    },
+    "jupyter.jupyterServerType": "local"
 }
