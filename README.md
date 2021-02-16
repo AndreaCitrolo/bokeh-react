@@ -1,6 +1,6 @@
 # bokeh-react
 This repository includes a very basic example of how to integrate bokeh plots in react components 
-as long as some nice receipts to create a working environment for full stack development exploiting
+as well as some nice receipts to create a working environment for full stack development exploiting
 the new remote container features of VSCode.
 
 What do you need to make this work:
