@@ -4,3 +4,5 @@
 **/build/
 **/.eslintcache
 **/*.sqlite3
+plots/**
+!plots/.keep
