@@ -1,23 +1,29 @@
-import logo from './logo.svg';
+import reactLogo from './react-logo.svg';
+import bokehLogo from './bokeh-logo.png';
 import './App.css';
+import Plot from './Plot'
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+      <span>
+        <img src={reactLogo} className="App-logo" alt="react-logo" />
+        <img src={bokehLogo} className="App-logo" alt="bokeh-logo" />
+      </span>
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
         <a
           className="App-link"
-          href="https://reactjs.org"
+          href="https://docs.bokeh.org/en/latest/index.html"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          Bokeh in React
         </a>
       </header>
+      <Plot/>
     </div>
   );
 }
